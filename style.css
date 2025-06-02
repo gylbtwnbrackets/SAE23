@@ -1,0 +1,523 @@
+ /* Custom font - Mom's Typewriter */
+    @font-face {
+      font-family: 'Moms Typewriter';
+      src: url('fonts/moms-typewriter.woff2') format('woff2'),
+           url('fonts/moms-typewriter.woff') format('woff'),
+           url('fonts/moms-typewriter.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --lain-blue: #66ccff;
+      --lain-dark-blue: #003366;
+      --lain-bg: #000011;
+      --lain-secondary-bg: #000022;
+      --lain-tertiary-bg: #001133;
+      --lain-red: #ff0066;
+      --lain-light-blue: #99ddff;
+      --lain-gray: #333366;
+      --lain-white: #ffffff;
+      --lain-yellow: #ffff00;
+    }
+
+    body {
+      font-family: 'Moms Typewriter', 'Courier New', monospace;
+      background: var(--lain-bg);
+      color: var(--lain-blue);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Glitch background effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(90deg, transparent 98%, var(--lain-blue) 100%),
+        linear-gradient(0deg, transparent 98%, var(--lain-blue) 100%);
+      background-size: 50px 50px;
+      opacity: 0.02;
+      animation: scan 0.1s linear infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(50px); }
+    }
+
+    /* Terminal window effect */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 2px solid var(--lain-blue);
+      border-radius: 0;
+      background: rgba(0, 0, 17, 0.9);
+      box-shadow: 
+        0 0 20px var(--lain-blue),
+        inset 0 0 20px rgba(102, 204, 255, 0.1);
+    }
+
+    /* Header with cyberpunk styling */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      border-bottom: 1px solid var(--lain-blue);
+      padding-bottom: 1rem;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 400;
+      color: var(--lain-blue);
+      text-shadow: 
+        0 0 10px var(--lain-blue),
+        0 0 20px var(--lain-blue),
+        0 0 30px var(--lain-blue);
+      margin-bottom: 0.5rem;
+      animation: flicker 3s linear infinite;
+    }
+
+    @keyframes flicker {
+      0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+        opacity: 1;
+      }
+      20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+        opacity: 0.4;
+      }
+    }
+
+    .header p {
+      color: var(--lain-blue);
+      font-size: 1rem;
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .system-status {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--lain-secondary-bg);
+      border: 1px solid var(--lain-blue);
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      color: var(--lain-blue);
+    }
+
+    .system-status::before {
+      content: '● ';
+      color: var(--lain-blue);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Terminal-style forms */
+    .main-form {
+      background: var(--lain-secondary-bg);
+      border: 2px solid var(--lain-blue);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .main-form::before {
+      content: '> INTERFACE_METEO.EXE';
+      position: absolute;
+      top: -1px;
+      left: 10px;
+      background: var(--lain-bg);
+      padding: 0 10px;
+      color: var(--lain-blue);
+      font-size: 0.8rem;
+    }
+
+    .form-section {
+      margin-bottom: 1.5rem;
+      border-left: 2px solid var(--lain-dark-blue);
+      padding-left: 1rem;
+    }
+
+    .form-section h3 {
+      margin-bottom: 1rem;
+      color: var(--lain-blue);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-section h3::before {
+      content: '>> ';
+      color: var(--lain-blue);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+      color: var(--lain-blue);
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--lain-blue);
+      border-radius: 0;
+      font-size: 1rem;
+      background: var(--lain-bg);
+      color: var(--lain-blue);
+      font-family: 'Moms Typewriter', 'Courier New', monospace;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--lain-blue);
+      box-shadow: 0 0 10px var(--lain-blue);
+      background: rgba(102, 204, 255, 0.05);
+    }
+
+    input[type="text"]::placeholder {
+      color: var(--lain-dark-blue);
+    }
+
+    /* Slider styling */
+    .days-selector {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .slider-container {
+      flex: 1;
+      position: relative;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 4px;
+      border-radius: 0;
+      background: var(--lain-dark-blue);
+      outline: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    input[type="range"]:hover {
+      opacity: 1;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 0;
+      background: var(--lain-blue);
+      color: var(--lain-bg);
+      border-radius: 50%;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 0;
+      background: var(--lain-blue);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 5px var(--lain-blue);
+    }
+
+    .days-display {
+      background: var(--lain-blue);
+      color: var(--lain-bg);
+      padding: 8px 16px;
+      border-radius: 0;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Checkbox grid */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      background: var(--lain-tertiary-bg);
+      border: 1px solid var(--lain-dark-blue);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .checkbox-item:hover {
+      background: rgba(102, 204, 255, 0.1);
+      border-color: var(--lain-blue);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      margin-right: 12px;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--lain-blue);
+    }
+
+    .checkbox-item label {
+      margin-bottom: 0;
+      flex: 1;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-transform: none;
+    }
+
+    /* Buttons */
+    .search-btn,
+    .comparison-btn {
+      background: var(--lain-bg);
+      color: var(--lain-blue);
+      border: 2px solid var(--lain-blue);
+      padding: 12px 24px;
+      border-radius: 0;
+      font-size: 1rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Moms Typewriter', 'Courier New', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .search-btn:hover,
+    .comparison-btn:hover {
+      background: var(--lain-blue);
+      color: var(--lain-bg);
+      box-shadow: 0 0 15px var(--lain-blue);
+    }
+
+    .comparison-btn.clear {
+      border-color: var(--lain-red);
+      color: var(--lain-red);
+    }
+
+    .comparison-btn.clear:hover {
+      background: var(--lain-red);
+      color: var(--lain-bg);
+      box-shadow: 0 0 15px var(--lain-red);
+    }
+
+    /* Comparison section */
+    .comparison-section {
+      background: var(--lain-secondary-bg);
+      border: 1px solid var(--lain-dark-blue);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .comparison-section h3 {
+      color: var(--lain-blue);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .comparison-section h3::before {
+      content: '>> ';
+    }
+
+    .comparison-controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* Weather cards */
+    .weather-results {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .weather-card {
+      background: var(--lain-secondary-bg);
+      border: 2px solid var(--lain-blue);
+      padding: 2rem;
+      position: relative;
+    }
+
+    .weather-card::before {
+      content: '> DONNEES_METEO.LOG';
+      position: absolute;
+      top: -1px;
+      left: 10px;
+      background: var(--lain-bg);
+      padding: 0 10px;
+      color: var(--lain-blue);
+      font-size: 0.8rem;
+    }
+
+    .comparison-card {
+      border-color: var(--lain-light-blue);
+    }
+
+    .comparison-card::before {
+      content: '> COMPARAISON_DONNEES.LOG';
+      color: var(--lain-light-blue);
+    }
+
+    .city-name {
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--lain-blue);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .forecast-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .forecast-day {
+      background: var(--lain-tertiary-bg);
+      border: 1px solid var(--lain-dark-blue);
+      padding: 1rem;
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--lain-dark-blue);
+      padding-bottom: 0.5rem;
+    }
+
+    .day-date {
+      color: var(--lain-blue);
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+
+    .weather-icon {
+      width: 32px;
+      height: 32px;
+      filter: hue-rotate(90deg) saturate(0) brightness(2);
+    }
+
+    .weather-info {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dotted var(--lain-dark-blue);
+    }
+
+    .info-label {
+      color: var(--lain-green);
+      font-size: 0.9rem;
+    }
+
+    .info-value {
+      color: var(--lain-white);
+      font-size: 0.9rem;
+    }
+
+    /* Messages */
+    #messageArea {
+      margin: 1rem 0;
+    }
+
+    .message {
+      padding: 12px;
+      border: 1px solid;
+      background: var(--lain-secondary-bg);
+      font-family: 'Moms Typewriter', 'Courier New', monospace;
+    }
+
+    .message.error {
+      border-color: var(--lain-red);
+      color: var(--lain-red);
+    }
+
+    .message.success {
+      border-color: var(--lain-blue);
+      color: var(--lain-blue);
+    }
+
+    .message.loading {
+      border-color: var(--lain-yellow);
+      color: var(--lain-yellow);
+    }
+
+    .message.loading::before {
+      content: '> ';
+      animation: pulse 1s infinite;
+    }
+
+    /* Small text */
+    small {
+      color: var(--lain-dark-blue);
+      font-size: 0.8rem;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .form-row {
+        flex-direction: column;
+      }
+      
+      .container {
+        padding: 10px;
+      }
+      
+      .header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .comparison-controls {
+        flex-direction: column;
+      }

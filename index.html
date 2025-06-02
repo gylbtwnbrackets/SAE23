@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css"> 
+  <title>METEO.EXE - Jour Présent, Temps Présent</title>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="system-status">SYSTÈME EN LIGNE</div>
+      <h1>METEO.EXE</h1>
+      <p>Bienvenue dans le système d'analyse météo </p>
+    </header>
+
+    <main>
+      <!-- Formulaire de recherche météo -->
+      <section class="main-form" role="form">
+        <div class="form-section">
+          <h3>Requête de Localisation</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cityInput">Nom de la ville :</label>
+              <input type="text" id="cityInput" placeholder="Entrez le nom d'une ville..." required />
+              <small id="cityHelp">Entrez le nom d'une ville française</small>
+            </div>
+            <button class="search-btn" type="button">EXÉCUTER</button>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Durée des Prévisions</h3>
+          <div class="days-selector">
+            <label for="daysRange">Jours :</label>
+            <div class="slider-container">
+              <input type="range" id="daysRange" min="1" max="7" value="3" aria-describedby="daysHelp" />
+            </div>
+            <div class="days-display" id="daysDisplay">3 Jours</div>
+          </div>
+          <small id="daysHelp">Choisissez entre 1 et 7 jours de prévisions</small>
+        </div>
+
+        <div class="form-section">
+          <h3>Données Supplémentaires</h3>
+          <div class="checkbox-grid">
+            <div class="checkbox-item">
+              <input type="checkbox" id="latitude" value="latitude" />
+              <label for="latitude">Coordonnées Latitude</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="longitude" value="longitude" />
+              <label for="longitude">Coordonnées Longitude</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="rain" value="rr1" />
+              <label for="rain">Données Précipitations (mm)</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="wind" value="wind10m" />
+              <label for="wind">Vitesse du Vent (km/h)</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="windDirection" value="dirwind10m" />
+              <label for="windDirection">Direction du Vent (°)</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comparaison -->
+      <section class="comparison-section">
+        <h3>Comparaison de Villesn</h3>
+        <p>Execute plusieurs requête et les met cote à cote pour les comparer</p>
+        <div class="comparison-controls">
+          <button class="comparison-btn" id="addToComparison">AJOUTER A LA COMPARAISON</button>
+          <button class="comparison-btn clear" id="clearComparison">CLEAR DATA</button>
+        </div>
+        <div id="comparisonCount"></div>
+      </section>
+
+      <!-- Messages / Erreurs -->
+      <div id="messageArea" role="alert" aria-live="polite"></div>
+
+      <!-- Résultats météo -->
+      <section id="weatherResults" class="weather-results" role="region" aria-label="Weather Results"></section>
+    </main>
+  </div>
+
+ <script src="script.js"></script>
+</body>
+</html>
