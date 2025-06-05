@@ -183,8 +183,17 @@ function renderComparisonCard(cityData, forecast, options) {
     createElement("div", { className: "forecast-grid" }, limitedForecast.map(day => {
       return createElement("div", { className: "forecast-day" }, [
         createElement("div", { className: "day-header" }, [
-          createElement("div", { className: "day-date", innerText: day.datetime }),
-          createElement("div", { className: "weather-icon", innerText: getWeatherSymbol(day.weather) })
+          createElement("div", { className: "day-date", innerText: new Date(day.datetime).toLocaleDateString('fr-FR', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}).toUpperCase() }),
+          createElement("img", { 
+  className: "weather-icon", 
+  src: getWeatherSymbol(day.weather),
+  alt: "Icône météo"
+})
         ]),
         createElement("div", { className: "weather-info" }, [
           createInfoItem("Temp. max", `${day.tmax} °C`),
