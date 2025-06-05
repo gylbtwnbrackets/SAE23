@@ -23,7 +23,7 @@
 
     <main>
       <!-- Formulaire principal de recherche météo -->
-      <section class="main-form" role="form" aria-labelledby="main-form-title">
+      <form class="main-form" aria-labelledby="main-form-title">
         <h2 id="main-form-title" class="sr-only">Formulaire de recherche météorologique</h2>
         
         <!-- Section ville -->
@@ -62,9 +62,6 @@
                 max="7" 
                 value="3" 
                 aria-describedby="daysHelp"
-                aria-minvalue="1"
-                aria-maxvalue="7"
-                aria-valuenow="3"
                 aria-valuetext="3 jours"
               >
               <small id="daysHelp" class="help-text">Glissez pour choisir entre 1 et 7 jours</small>
@@ -105,7 +102,7 @@
             </div>
           </fieldset>
         </div>
-      </section>
+      </form>
 
       <!-- Section comparaison -->
       <section class="comparison-section" aria-labelledby="comparison-title">
