@@ -1,7 +1,15 @@
-   // --- Configuration API ---
+// --- Configuration API ---
 const API_CONFIG = {
   TOKEN: '545767e77c606f52e9dd5542df4d34c4d8b2d22ed2d199074d9156d410115458',
   BASE_URL: 'https://api.meteo-concept.com/api'
+};
+
+// --- État de l'application ---
+const appState = {
+  currentCityData: null,
+  comparisonCities: [],
+  isLoading: false,
+  theme: localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
 };
 
 // --- 1. Initialisation DOM et événements ---
@@ -12,11 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("addToComparison").addEventListener("click", addToComparison);
   document.getElementById("clearComparison").addEventListener("click", clearComparison);
   document.getElementById("daysRange").addEventListener("input", updateDaysDisplay);
+  updateDaysDisplay(); // initialise le texte du slider
 });
 
-function updateDaysDisplay(e) {
-  const value = e.target.value;
-  document.getElementById("daysDisplay").textContent = `${value} jour${value > 1 ? 's' : ''}`;
+function updateDaysDisplay() {
+  const val = document.getElementById('daysRange').value;
+  document.getElementById('daysDisplay').textContent = `${val} JOUR${val > 1 ? 'S' : ''}`;
 }
 
 // --- 2. API Fetching ---
@@ -46,13 +55,44 @@ async function handleSearch() {
     const cityData = await fetchCityData(city);
     const forecast = await fetchForecast(cityData.insee, days);
     appState.currentCityData = { cityData, forecast };
-    renderForecast(cityData, forecast, options);
+    renderForecast(cityData, forecast, options, days);
     showMessage("Prévisions chargées !", "success");
   } catch (err) {
     showMessage(err.message, "error");
   }
 }
+function createInfoItem(label, value) {
+  const container = document.createElement("div");
+  container.className = "info-item";
 
+  const labelEl = document.createElement("div");
+  labelEl.className = "info-label";
+  labelEl.innerText = label;
+
+  const valueEl = document.createElement("div");
+  valueEl.className = "info-value";
+  valueEl.innerText = value;
+
+  container.appendChild(labelEl);
+  container.appendChild(valueEl);
+  return container;
+}
+
+function getWeatherSymbol(code) {
+  const symbols = {
+    0: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2600.png',
+    1: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f324.png',
+    2: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/26c5.png',
+    3: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/2601.png',
+    4: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f327.png',
+    5: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f329.png',
+    6: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f328.png',
+    7: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f32b.png',
+    8: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f327.png'
+  };
+
+  return symbols[code] || symbols[0]; // Icône par défaut : soleil
+}
 function getCheckedOptions() {
   return Array.from(document.querySelectorAll(".checkbox-grid input:checked"))
     .map(el => el.value);
@@ -67,15 +107,27 @@ function renderForecast(cityData, forecast, options) {
   const container = document.getElementById("weatherResults");
   container.innerHTML = "";
 
+  const days = parseInt(document.getElementById("daysRange").value); // <-- On récupère la valeur du slider ici
+  const limitedForecast = forecast.slice(0, days); // <-- On tronque la liste
+
   const card = createElement("div", { className: "weather-card" }, [
     createElement("div", { className: "city-header" }, [
       createElement("h4", { className: "city-name", innerText: cityData.name })
     ]),
-    createElement("div", { className: "forecast-grid" }, forecast.map(day => {
+    createElement("div", { className: "forecast-grid" }, limitedForecast.map(day => {
       return createElement("div", { className: "forecast-day" }, [
         createElement("div", { className: "day-header" }, [
-          createElement("div", { className: "day-date", innerText: day.datetime }),
-          createElement("div", { className: "weather-icon", innerText: getWeatherSymbol(day.weather) })
+          createElement("div", { className: "day-date", innerText: new Date(day.datetime).toLocaleDateString('fr-FR', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}).toUpperCase() }),
+        createElement("img", { 
+  className: "weather-icon", 
+  src: getWeatherSymbol(day.weather),
+  alt: "Icône météo"
+})
         ]),
         createElement("div", { className: "weather-info" }, [
           createInfoItem("Temp. max", `${day.tmax} °C`),
@@ -92,17 +144,6 @@ function renderForecast(cityData, forecast, options) {
   container.appendChild(card);
 }
 
-function createInfoItem(label, value) {
-  return createElement("div", { className: "info-item" }, [
-    createElement("div", { className: "info-label", innerText: label }),
-    createElement("div", { className: "info-value", innerText: value })
-  ]);
-}
-
-function getWeatherSymbol(code) {
-  const icons = { 0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 4: "🌧️", 5: "⛈️", 6: "❄️" };
-  return icons[code] || "❓";
-}
 
 // --- 4. Comparaison ---
 function addToComparison() {
@@ -121,19 +162,25 @@ function updateComparison() {
   const container = document.getElementById("weatherResults");
   container.innerHTML = "";
   document.getElementById("comparisonCount").textContent = `${appState.comparisonCities.length} ville(s) comparée(s)`;
+
+  const days = parseInt(document.getElementById("daysRange").value);
+
   appState.comparisonCities.forEach(({ cityData, forecast }) => {
     const options = getCheckedOptions();
-    const card = renderComparisonCard(cityData, forecast, options);
+    const card = renderComparisonCard(cityData, forecast, options, days);
     container.appendChild(card);
   });
 }
 
 function renderComparisonCard(cityData, forecast, options) {
+  const days = parseInt(document.getElementById("daysRange").value); // <-- pareil ici
+  const limitedForecast = forecast.slice(0, days);
+
   const card = createElement("div", { className: "weather-card comparison-card" }, [
     createElement("div", { className: "city-header" }, [
       createElement("h4", { className: "city-name", innerText: cityData.name })
     ]),
-    createElement("div", { className: "forecast-grid" }, forecast.map(day => {
+    createElement("div", { className: "forecast-grid" }, limitedForecast.map(day => {
       return createElement("div", { className: "forecast-day" }, [
         createElement("div", { className: "day-header" }, [
           createElement("div", { className: "day-date", innerText: day.datetime }),
@@ -153,6 +200,7 @@ function renderComparisonCard(cityData, forecast, options) {
   ]);
   return card;
 }
+
 
 // --- 5. Thème ---
 function initTheme() {
@@ -181,11 +229,3 @@ function createElement(tag, attributes = {}, children = []) {
   });
   return el;
 }
-
-// --- État de l'application ---
-const appState = {
-  currentCityData: null,
-  comparisonCities: [],
-  isLoading: false,
-  theme: localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-};
